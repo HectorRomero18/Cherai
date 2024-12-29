@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'mi_blog',
+    'mi_blog.apps.MiBlogConfig',
     'chat',
     'crispy_forms',
 ]
