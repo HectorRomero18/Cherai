@@ -100,7 +100,7 @@ def custom_login(request):
                 form.add_error(None, 'Invalid credentials')
     else:
         form = CustomLoginForm()
-    return render(request, 'C:/mi_blog/project/mi_blog/templates/account/login.html', {'form': form})
+    return render(request, 'account/login.html', {'form': form})
 
 def custom_logout(request):
     logout(request)  # Cierra la sesión del usuario
