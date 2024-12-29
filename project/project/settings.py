@@ -15,9 +15,11 @@ import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'https://cheraione.onrender.com']
 
 SECRET_KEY = 'robbmFQcTcKJg9Q55ZMVgzPPalKuzzfEbBk3TJNeaXY'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5' 
 STATIC_ROOT = BASE_DIR / "staticfiles"
@@ -144,8 +146,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
-import django_heroku
-django_heroku.settings(locals())
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
