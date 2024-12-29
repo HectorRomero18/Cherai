@@ -17,6 +17,8 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
+SECRET_KEY = 'robbmFQcTcKJg9Q55ZMVgzPPalKuzzfEbBk3TJNeaXY'
+
 CRISPY_TEMPLATE_PACK = 'bootstrap5' 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
@@ -29,8 +31,6 @@ SECRET_KEY = 'django-insecure-ct3m4qhuc!dgvmg^0h@ow-6i0w&l#3b5&jsw$^w3*5gkez*q0-
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = 'mi_blog.User' 
 
@@ -62,6 +62,7 @@ SOCIALACCOUNT_LOGIN_ON_GET = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -72,6 +73,8 @@ MIDDLEWARE = [
     # Middleware de allauth
     'allauth.account.middleware.AccountMiddleware',
 ]
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 ROOT_URLCONF = 'project.urls'
 
