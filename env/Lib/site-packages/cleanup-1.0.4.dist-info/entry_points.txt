@@ -1,0 +1,2 @@
+[console_scripts]
+cleanup = cleanup.cleanup:main
