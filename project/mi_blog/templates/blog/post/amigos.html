@@ -1,0 +1,34 @@
+{% extends "blog/base.html" %}
+
+{% block content %}
+  <!-- Mostrar los amigos -->
+  <div class="container mt-5">
+    <h2 class="text-center mb-4">My Friends</h2>
+    <div class="row">
+      {% if amigos %}
+        {% for amigo in amigos %}
+          <div class="col-md-4 mb-4">
+            <div class="card text-center">
+              <div class="card-body">
+                {% if amigo.image_profile %}
+                  <img src="{{ amigo.image_profile.url }}" alt="Foto de {{ amigo.username }}" 
+                       class="rounded-circle img-fluid mb-3" style="width: 100px; height: 100px;">
+                {% else %}
+                  <img src="https://via.placeholder.com/100" alt="Imagen por defecto" 
+                       class="rounded-circle img-fluid mb-3" style="width: 100px; height: 100px;">
+                {% endif %}
+                <h5 class="card-title">{{ amigo.username|title }}</h5>
+                <a href="{% url 'mi_blog:perfilOne' amigo.username amigo.username|slugify %}" class="btn btn-info">Ver perfil</a>
+                <a href="{% url 'friends:delete_friend' amigo.username %}" class="btn btn-info">Eliminar</a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="col-12 text-center">
+          <p>Aún no tiene amigos.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

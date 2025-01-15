@@ -20,18 +20,26 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.shortcuts import redirect
 from mi_blog import views
+from mi_blog.sitemaps import PostSitemaps
+from django.contrib.sitemaps.views import sitemap
 
 # Redirigir la página principal a la página de login
 def redirect_to_login(request):
     return redirect('account_login')  # Redirige a la vista de login de Allauth
 
+sitemaps = {
+    'posts': PostSitemaps,
+}
 
 urlpatterns = [
     path('', views.custom_login, name='home'),
     path('blog/', include('mi_blog.urls', namespace='blog')),
     path('chat/', include('chat.urls', namespace='chat')),
     path('admin/', admin.site.urls),
+    path('friendships/', include('friends.urls' , namespace='friends')),
+    path('configs/', include('Configs.urls' , namespace='configs')),
     path('accounts/', include('allauth.urls')),
+    path('sitemaps.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap')
 ]
 # Solo en desarrollo, Django sirve archivos de medios
 if settings.DEBUG:

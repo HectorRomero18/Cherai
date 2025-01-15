@@ -1,22 +1,48 @@
-{% extends 'blog/base.html' %}
-
-{% block title %}
-Crear Nuevo Artículo - Mi Blog
-{% endblock %}
+{% extends "blog/base.html" %}
 
 {% block content %}
-<h1>Crear Nuevo Artículo</h1>
-<form method="post">
+<form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    <div class="mb-3">
-        <label for="title" class="form-label">Título:</label>
-        <input type="text" id="title" name="title" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label for="content" class="form-label">Contenido:</label>
-        <textarea id="content" name="content" rows="5" class="form-control" required></textarea>
-    </div>
-    <button type="submit" class="btn btn-primary">Publicar</button>
-</form>
+    <div class="container mt-5">
+        <div class="card shadow-lg border-light rounded">
+            <div class="card-header bg-primary text-white text-center py-4">
+                <h4 class="font-weight-bold mb-0">Crear Artículo</h4>
+                <p class="mb-0">Comparte tu conocimiento con el mundo</p>
+            </div>
+            <div class="card-body p-5">
+                <div class="form-group mb-4">
+                    <label for="title" class="font-weight-bold">Título del Artículo</label>
+                    <input type="text" id="title" name="title" class="form-control form-control-lg" placeholder="Escribe el título aquí..." required>
+                </div>
+                
+                <div class="form-group mb-4">
+                    <label for="content" class="font-weight-bold">Contenido</label>
+                    <textarea id="content" name="content" class="form-control form-control-lg" rows="6" placeholder="Escribe el contenido aquí..." required></textarea>
+                </div>
+                
+                
+                
+                <!-- Mejorado el diseño de la sección de imagen -->
+                <div class="form-group mb-4">
+                    <label for="image" class="font-weight-bold">Imagen del Artículo</label>
+                    <div class="custom-file">
+                        <input type="file" id="image" name="image" class="custom-file-input">
+                        <label class="custom-file-label" for="image">Selecciona una imagen</label>
+                    </div>
+                    <small class="form-text text-muted">Puedes subir una imagen relacionada con el artículo.</small>
+                </div>
 
+                <div class="form-group mb-4">
+                    <label for="tags" class="font-weight-bold">Etiquetas (separadas por comas)</label>
+                    <input type="text" id="tags" name="tags" class="form-control form-control-lg" placeholder="Ej: Tecnología, Desarrollo, Programación">
+                </div>
+
+                <div class="form-group text-center mt-5">
+                    <button type="submit" class="btn btn-success btn-lg px-5 py-3">Crear Artículo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
 {% endblock %}
+

@@ -1,10 +1,10 @@
 from django.contrib import admin
-from mi_blog.models import Post, User
+from mi_blog.models import Post, User, Comment, PostLike
 
 # Registrar el modelo Post en el panel de administración
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['username', 'email', 'first_name', 'last_name', 'is_staff']
+    list_display = ['username', 'email', 'first_name', 'last_name', 'is_staff',]
     search_fields = ['username', 'email']
 
 @admin.register(Post)
@@ -29,4 +29,29 @@ class PostAdmin(admin.ModelAdmin):
     
     # Mostrar un filtro más limpio para editar el 'status'
     list_editable = ['status']  # Permite editar el estado de un post directamente desde la lista
+
+@admin.register(Comment)
+class CommentRegister(admin.ModelAdmin):
     
+    list_display = ['name', 'created', 'active']
+
+    oredering = ['-created']
+
+    list_filter = ['name', 'content', 'created', 'updated']
+
+    search_fields = ['name', 'body']
+
+
+
+@admin.register(PostLike)
+class PostLikeRegister(admin.ModelAdmin):
+    
+    list_display = ['post', 'user', 'created_at']
+
+    oredering = ['-post']
+
+    list_filter = ['post', 'user']
+
+    search_fields = ['post', 'user']
+    
+

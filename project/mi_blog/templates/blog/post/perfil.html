@@ -1,21 +1,142 @@
 {% extends 'blog/base.html' %}
 
 {% block content %}
-  <h2>Profile</h2>
-  <form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save Changes</button>
-  </form>
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <!-- Sección de edición de perfil -->
+    <div class="col-lg-10">
+      <div class="card border-0 shadow-lg">
+        <div class="card-header bg-primary text-white text-center py-4">
+          <h2 class="mb-0">Editar Perfil</h2>
+        </div>
+        <div class="card-body p-5">
+          <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+            {% csrf_token %}
+            <!-- Formulario con filas y columnas -->
+            <div class="row g-4">
+              {% for field in form %}
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="{{ field.id_for_label }}" class="form-label fw-bold text-secondary">
+                      {{ field.label }}
+                    </label>
+                    {{ field }}
+                    {% if field.help_text %}
+                      <small class="form-text text-muted">{{ field.help_text }}</small>
+                    {% endif %}
+                    {% for error in field.errors %}
+                      <div class="invalid-feedback d-block mt-1">{{ error }}</div>
+                    {% endfor %}
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+            <div class="text-center mt-4">
+              <button type="submit" class="btn btn-primary btn-lg px-5 rounded-pill shadow">
+                Guardar Cambios
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  {% if user.image_profile %}
-    <h3>Your Profile Image:</h3>
-    <img src="{{ user.image_profile.url }}" alt="Profile Image" width="150">
-    <form action="{% url 'mi_blog:delete_profile_image' %}" method="POST">
-      {% csrf_token %}
-      <button type="submit">Delete Image</button>
-    </form>
-  {% else %}
-    <p>No profile image uploaded.</p>
-  {% endif %} 
+  <!-- Sección de imagen de perfil -->
+  <div class="row justify-content-center mt-5">
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-lg">
+        <div class="card-header bg-dark text-white text-center py-4">
+          <h3 class="mb-0">Tu Imagen de Perfil</h3>
+        </div>
+        <div class="card-body text-center p-4">
+          {% if user.image_profile %}
+            <img src="{{ user.image_profile.url }}" alt="Imagen de Perfil" 
+                 class="rounded-circle img-thumbnail shadow-lg mb-4"
+                 style="width: 150px; height: 150px; object-fit: cover;">
+
+            <form action="{% url 'mi_blog:delete_profile_image' %}" method="POST" class="d-inline-block">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-outline-danger btn-sm px-4 rounded-pill shadow">
+                Eliminar Imagen
+              </button>
+            </form>
+          {% else %}
+            <p class="text-muted">Aún no tienes una imagen de perfil. ¡Sube una para personalizar tu perfil!</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Estilos adicionales -->
+<style>
+  body {
+    background-color: #f8f9fa; /* Fondo suave */
+    font-family: 'Roboto', sans-serif;
+  }
+
+  .card-header {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+  }
+
+  .btn-primary {
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(45deg, #0056b3, #003f7f);
+  }
+
+  .btn-outline-danger {
+    border: 2px solid #dc3545;
+    color: #dc3545;
+    font-weight: bold;
+    transition: all 0.3s ease;
+  }
+
+  .btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: white;
+  }
+
+  .rounded-circle {
+    border: 4px solid #f8f9fa;
+  }
+
+  .form-control {
+    border-radius: 10px;
+    border: 1px solid #ced4da;
+    padding: 12px;
+    font-size: 1rem;
+    box-shadow: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+
+  label.form-label {
+    font-weight: bold;
+    color: #495057;
+  }
+
+  .shadow-lg {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .text-muted {
+    font-size: 0.95rem;
+  }
+
+  .rounded-pill {
+    border-radius: 50px;
+  }
+</style>
 {% endblock %}

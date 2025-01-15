@@ -1,0 +1,201 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h2 class="text-center mb-5">Usuarios de la App</h2>
+    
+    {% if users %}
+      <div class="list-group">
+        {% for user in users %}
+          <div class="list-group-item d-flex align-items-start border-0 rounded-lg shadow-sm mb-4">
+            <div class="d-flex align-items-center" style="width: 100%; padding: 15px;">
+              
+              <!-- Foto de perfil -->
+              <div class="mr-4">
+                {% if user.image_profile %}
+                  <img src="{{ user.image_profile.url }}" alt="Foto de {{ user.username }}" 
+                       class="rounded-circle" style="width: 70px; height: 70px; object-fit: cover;">
+                {% else %}
+                  <img src="https://via.placeholder.com/70" alt="Imagen por defecto" 
+                       class="rounded-circle" style="width: 70px; height: 70px;">
+                {% endif %}
+              </div>
+
+              <!-- Información del usuario -->
+              <div class="w-100">
+                <div class="d-flex justify-content-between mb-3">
+                  <div>
+                    <h5 class="mb-1 text-dark">{{ user.username|title }}</h5>
+                    <p class="text-muted mb-0">{{ user.first_name }} {{ user.last_name }}</p>
+                    <p class="text-muted mb-1"><small>Miembro desde {{ user.date_joined|date:"F j, Y" }}</small></p>
+                  </div>
+                </div>
+                <p class="text-muted mt-2">{{ user.bio|default:"No hay biografía disponible." }}</p>
+              </div>
+
+            </div>
+
+            <!-- Opciones de Amistad -->
+            <div class="d-flex justify-content-end mt-3">
+              {% if request.user != user %}
+                {% with user_data=user_data.user %}
+                  {% if user_data.are_friends %}
+                    <i class="fas fa-user-friends fa-lg text-secondary" title="Amigos"></i>
+                  {% elif user_data.friend_request_received %}
+                    <div class="d-flex">
+                      <a href="{% url 'friends:accept_friend_request' username=user.username %}" 
+                         class="btn btn-success btn-sm mr-2" title="Aceptar solicitud">
+                         <i class="fas fa-check"></i>
+                      </a>
+                      <a href="{% url 'friends:reject_friend_request' username=user.username %}" 
+                         class="btn btn-danger btn-sm" title="Rechazar solicitud">
+                         <i class="fas fa-times"></i>
+                      </a>
+                    </div>
+                  {% elif user_data.friend_request_sent %}
+                    <i class="fas fa-paper-plane fa-lg text-info" title="Solicitud enviada"></i>
+                  {% endif %}
+
+                  {% if user_data.are_friends %}
+                    <a href="{% url 'friends:delete_friend' username=user.username %}" 
+                       class="btn btn-warning btn-sm ml-2" title="Eliminar amigo">
+                       <i class="fas fa-user-times"></i>
+                    </a>
+                  {% else %}
+                    <!-- Botón de enviar solicitud deshabilitado si ya son amigos o ya se envió una solicitud -->
+                    <div class="d-flex flex-column align-items-center mt-3">
+                      <a href="{% url 'mi_blog:perfilOne' user.username user.username|slugify %}" 
+                         class="btn btn-outline-primary btn-sm mb-2" title="Ver perfil">
+                         <i class="fas fa-eye"></i>
+                      </a>
+                    
+                      <a href="{% url 'friends:send_friend_request' username=user.username %}" 
+                         class="btn btn-primary btn-sm mb-2 {% if user_data.are_friends or user_data.friend_request_sent %}disabled{% endif %}" 
+                         {% if user_data.are_friends or user_data.friend_request_sent %}disabled{% endif %}
+                         title="Enviar solicitud">
+                         <i class="fas fa-user-plus"></i>
+                      </a>
+                    </div>
+                  {% endif %}
+
+                  <!-- Aquí empieza la lógica de "Seguir" o "Dejar de seguir" -->
+                  {% if user_data.is_following %}
+                    <!-- Si el usuario ya sigue al otro -->
+                    <form action="{% url 'friendships:unfollow_user' user.username %}" method="POST">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-danger btn-sm ml-2" title="Dejar de seguir">
+                        <i class="fas fa-user-times"></i> Dejar de seguir
+                      </button>
+                    </form>
+                  {% else %}
+                    <!-- Si el usuario NO sigue al otro -->
+                    <form action="{% url 'friends:follow_user' user.username %}" method="POST">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-primary btn-sm ml-2" title="Seguir">
+                        <i class="fas fa-user-plus"></i> Seguir
+                      </button>
+                    </form>
+                  {% endif %}
+                {% endwith %}
+              {% endif %}
+            </div>
+
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-center">No hay usuarios registrados.</p>
+    {% endif %}
+  </div>
+
+  <style>
+    .list-group-item {
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      padding: 15px;
+      transition: box-shadow 0.3s ease;
+      border-left: 5px solid transparent;
+    }
+
+    .list-group-item:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border-left-color: #007bff;
+    }
+
+    .list-group-item .btn {
+      transition: background-color 0.3s ease;
+    }
+
+    .list-group-item .btn:hover {
+      background-color: #0056b3;
+      color: white;
+    }
+
+    .list-group-item .btn-outline-primary:hover {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .text-muted {
+      font-size: 0.9rem;
+    }
+
+    .list-group-item p {
+      font-size: 0.9rem;
+    }
+
+    .list-group-item .btn-secondary {
+      background-color: #6c757d;
+      border-color: #6c757d;
+    }
+
+    .list-group-item .btn-secondary:hover {
+      background-color: #5a6268;
+      border-color: #545b62;
+    }
+
+    .list-group-item .btn-warning {
+      background-color: #ffc107;
+      border-color: #ffc107;
+    }
+
+    .list-group-item .btn-warning:hover {
+      background-color: #e0a800;
+      border-color: #d39e00;
+    }
+
+    .btn-sm {
+      padding: 5px 10px;
+    }
+
+    /* Alinear los iconos de la amistad */
+    .d-flex.justify-content-end {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      width: 100%;
+    }
+
+    .d-flex > a, .d-flex > button {
+      margin-left: 5px;
+    }
+
+    .d-flex > div {
+      margin-right: 10px;
+    }
+
+    /* Alineación de los botones en la parte inferior */
+    .d-flex.flex-column.align-items-center a {
+      width: 100%;
+      text-align: center;
+    }
+
+    /* Estilo para el botón deshabilitado */
+    .disabled {
+      background-color: #cccccc;
+      border-color: #cccccc;
+      cursor: not-allowed;
+    }
+  </style>
+
+{% endblock %}

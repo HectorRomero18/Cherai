@@ -1,0 +1,125 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <!-- Encabezado del perfil -->
+        <div class="card shadow-lg border-light">
+          <div class="card-header text-center bg-primary text-white">
+            <h2 class="mb-0">Perfil de {{ user.username|title }}</h2>
+          </div>
+          <div class="card-body">
+            <!-- Foto de perfil -->
+            {% if user.image_profile %}
+              <div class="text-center mb-4">
+                <img src="{{ user.image_profile.url }}" alt="Foto de perfil" 
+                    class="rounded-circle img-thumbnail" 
+                    style="width: 150px; height: 150px;">
+              </div>
+            {% else %}
+              <div class="text-center mb-4">
+                <img src="https://via.placeholder.com/150" alt="Imagen por defecto" 
+                    class="rounded-circle img-thumbnail" 
+                    style="width: 150px; height: 150px;">
+                <p class="text-muted">No se ha cargado una imagen de perfil.</p>
+              </div>
+            {% endif %}
+
+            <!-- Información del usuario -->
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <strong>Nombre completo:</strong> {{ user.first_name }} {{ user.last_name }}
+              </li>
+              <li class="list-group-item">
+                <strong>Email:</strong> {{ user.email }}
+              </li>
+              <li class="list-group-item">
+                <strong>Ciudad:</strong> {{ user.city|default:"No proporcionada" }}
+              </li>
+              <li class="list-group-item">
+                <strong>Biografía:</strong>
+                <p class="mt-2">{{ user.bio|default:"No se ha escrito una biografía." }}</p>
+              </li>
+              <li class="list-group-item">
+                <strong>Preferencias:</strong> {{ user.preferences|default:"No especificadas" }}
+              </li>
+              <li class="list-group-item">
+                <strong>Miembro desde:</strong> {{ user.date_joined|date:"F j, Y" }}
+              </li>
+            </ul>
+          </div>
+          <div class="card-footer text-center">
+            <a href="{% url 'mi_blog:profile' %}" class="btn btn-warning text-white">
+              Editar perfil
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mostrar Seguidores y Seguidos -->
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col-md-6 text-center">
+        <h3>Seguidores</h3>
+        <a href="{% url 'friends:my_followers'  %}" class="btn btn-outline-primary btn-lg">
+          {{ following_count }}
+        </a>
+      </div>
+
+      <div class="col-md-6 text-center">
+        <h3>Seguidos</h3>
+        <a href="{% url 'friends:my_followers' %}" class="btn btn-outline-primary btn-lg">
+          {{ followers_count }}
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botón de seguir o dejar de seguir -->
+  <div class="container mt-5 text-center">
+    {% if request.user != user %}
+      {% if request.user in user.followers.all %}
+        <a href="{% url 'friends:unfollow_user' user.username %}" class="btn btn-danger">
+          Dejar de seguir
+        </a>
+      {% else %}
+        <a href="{% url 'friends:follow_user' user.username %}" class="btn btn-success">
+          Seguir
+        </a>
+      {% endif %}
+    {% endif %}
+  </div>
+
+  <!-- Mostrar las publicaciones del usuario -->
+  <div class="container mt-5">
+    <h2 class="text-center mb-4">Publicaciones de {{ user.username }}</h2>
+    {% if posts %}
+      <div class="row">
+        {% for post in posts %}
+          <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-light">
+              {% if post.image %}
+                <img src="{{ post.image.url }}" alt="Imagen del post" 
+                    class="card-img-top" style="height: 200px; object-fit: cover;">
+              {% endif %}
+              <div class="card-body">
+                <h5 class="card-title">{{ post.title }}</h5>
+                <p class="card-text">{{ post.body|truncatewords:30 }}</p>
+                <p class="text-muted"><small>Publicado el {{ post.publish|date:"F j, Y" }}</small></p>
+                <a href="{% url 'mi_blog:detalle' post.publish.year post.publish.month post.publish.day post.slug %}" 
+                  class="btn btn-secondary">Leer más</a>
+                <a href="{% url 'mi_blog:delete' post.id %}" 
+                  class="btn btn-danger mt-2">Eliminar</a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-center">{{ user.username }} no ha publicado aún.</p>
+    {% endif %}
+  </div>
+{% endblock %}

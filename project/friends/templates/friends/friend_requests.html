@@ -1,0 +1,79 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h1 class="text-center mb-4">Solicitudes de Amistad</h1>
+
+    {% if received_requests %}
+      <div class="list-group">
+        {% for request in received_requests %}
+          <div class="list-group-item d-flex justify-content-between align-items-center shadow-sm mb-3 rounded-lg">
+            <div class="d-flex align-items-center">
+              <strong class="mr-3">{{ request.from_user.username }}</strong>
+              <span class="text-muted">quiere ser tu amigo.</span>
+            </div>
+
+            <div class="btn-group" role="group">
+              <!-- Botón para aceptar -->
+              <form method="post" action="{% url 'friends:accept_friend_request' request.from_user.username %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success btn-sm" title="Aceptar solicitud">
+                  <i class="fas fa-check"></i> Aceptar
+                </button>
+              </form>
+
+              <!-- Botón para rechazar -->
+              <form method="post" action="{% url 'friends:reject_friend_request' request.from_user.username %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-sm" title="Rechazar solicitud">
+                  <i class="fas fa-times"></i> Rechazar
+                </button>
+              </form>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="alert alert-info text-center">
+        No tienes solicitudes de amistad pendientes.
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Font Awesome para los iconos -->
+  <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+  <style>
+    /* Diseño adicional */
+    .list-group-item {
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      padding: 15px;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .list-group-item:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-group {
+      display: flex;
+      justify-content: space-between;
+      width: 220px;
+    }
+
+    .btn-group .btn {
+      width: 45%;
+    }
+
+    .alert {
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+    }
+  </style>
+
+{% endblock %}

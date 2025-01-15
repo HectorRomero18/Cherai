@@ -12,14 +12,12 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+from decouple import config, Csv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'https://cheraione.onrender.com']
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1' , cast=Csv())
 
-SECRET_KEY = 'robbmFQcTcKJg9Q55ZMVgzPPalKuzzfEbBk3TJNeaXY'
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5' 
 STATIC_ROOT = BASE_DIR / "staticfiles"
@@ -29,10 +27,11 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ct3m4qhuc!dgvmg^0h@ow-6i0w&l#3b5&jsw$^w3*5gkez*q0-'
+SECRET_KEY = config('DJANGO_SECRET_KEY')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DJANGO_DEBUG', default=True, cast=bool)
 
 AUTH_USER_MODEL = 'mi_blog.User' 
 
@@ -42,9 +41,16 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # Application definition
 
 INSTALLED_APPS = [
+    'mi_blog.apps.MiBlogConfig',
+    'friends.apps.FriendsConfig',
+    'Configs.apps.ConfigsConfig',
+    'taggit',
+    'tailwind',
+    'mi_blog_theme', 
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.sites',  # Necesario para allauth
+    'django.contrib.sitemaps',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -54,10 +60,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'mi_blog.apps.MiBlogConfig',
+    'django.contrib.postgres',
     # 'chat',
-    'crispy_forms',
+    'axes',
 ]
+
+TAILWIND_APP_NAME = 'mi_blog_theme' 
+
+# Configuración de seguridad
+AXES_FAILURE_LIMIT = 5  # Número de intentos fallidos permitidos
+AXES_COOLOFF_TIME = 1  # Tiempo de bloqueo en horas
+AXES_LOCKOUT_URL = '/account/locked/'  # URL donde redirigir cuando se bloquea un usuario
+
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
@@ -74,6 +88,11 @@ MIDDLEWARE = [
 
     # Middleware de allauth
     'allauth.account.middleware.AccountMiddleware',
+    
+    # Middleware de axes
+    'axes.middleware.AxesMiddleware',
+    
+
 ]
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -83,8 +102,7 @@ ROOT_URLCONF = 'project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [], #BASE_DIR / 'chat/templates'
-        
+        'DIRS': [os.path.join(BASE_DIR, 'mi_blog', 'templates')],  # Este directorio debe existir
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -92,10 +110,12 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'Configs.context_processors.user_config',  
             ],
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'project.wsgi.application'
 
@@ -105,8 +125,11 @@ WSGI_APPLICATION = 'project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DATABASE_NAME'),
+        'USER': config('DATABASE_USER'),
+        'PASSWORD': config('DATABASE_PASSWORD'),
+        
     }
 }
 
@@ -155,19 +178,19 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
+ 
 # Habilitar el inicio de sesión con redes sociales
 AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',  # Backend de allauth
+    'axes.backends.AxesStandaloneBackend',  # Backend de django-axes
     'django.contrib.auth.backends.ModelBackend',  # Backend predeterminado de Django
 )
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
-            'client_id': '115518650954-pgcbmukl44occk9qgcr4ts30382jf0v8.apps.googleusercontent.com',
-            'secret': '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',
-            'key': ''  # Deja vacío si no tienes clave adicional
+            'client_id': config('GOOGLE_CLIENT_ID'),
+            'secret': config('GOOGLE_CLIENT_SECRET'),
         }
     }
 }
@@ -184,3 +207,38 @@ LOGOUT_REDIRECT_URL = '/accounts/login/'  # URL a la que se redirige después de
 
 # Configura el sitio
 SITE_ID = 1
+
+# COOKIES
+CSRF_COOKIE_SECURE = False  # Asegura que la cookie CSRF solo se envíe a través de HTTPS
+CSRF_COOKIE_HTTPONLY = False  # Hace que la cookie no sea accesible a través de JavaScript
+SESSION_COOKIE_SECURE = False  # Asegura que la cookie de sesión solo se envíe a través de HTTPS
+SESSION_COOKIE_HTTPONLY = False  # Hace que la cookie de sesión no sea accesible a través de JavaScript
+
+
+# Redirect Security
+SECURE_SSL_REDIRECT = False  # Redirige automáticamente HTTP a HTTPS
+SECURE_HSTS_SECONDS = 0  # Asegura que los navegadores solo usen HTTPS por 1 año
+SECURE_HSTS_INCLUDE_SUBDOMAINS = False  # Aplica la política HSTS a todos los subdominios
+SECURE_HSTS_PRELOAD = False  # Permite que tu dominio se añada a la lista de dominios pre-cargados HSTS
+
+# Filtro de info sensible (errores)
+ADMINS = [('Xhector', 'hectorraul16romero@gmail.com')]  # Para recibir alertas sobre errores
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+}
+
+
