@@ -37,7 +37,7 @@ urlpatterns = [
     path('chat/', include('chat.urls', namespace='chat')),
     path('admin/', admin.site.urls),
     path('friendships/', include('friends.urls' , namespace='friends')),
-    path('configs/', include('Configs.urls' , namespace='configs')),
+    path('notifications/', include('notifications.urls' , namespace='notfs')),
     path('accounts/', include('allauth.urls')),
     path('sitemaps.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap')
 ]

@@ -41,6 +41,19 @@ class Post(models.Model):
         indexes = [models.Index(
                     fields=['-publish'])]
 
+    def save(self, *args, **kwargs):
+    # Generar slug automáticamente si no se proporciona
+        if not self.slug:
+            base_slug = slugify(self.title)
+            unique_slug = base_slug
+            counter = 1
+            while Post.objects.filter(slug=unique_slug).exists():
+                unique_slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = unique_slug
+        super().save(*args, **kwargs)
+
+
     def __str__(self):
         return (f"Title: {self.title}")
     

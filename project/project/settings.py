@@ -43,7 +43,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 INSTALLED_APPS = [
     'mi_blog.apps.MiBlogConfig',
     'friends.apps.FriendsConfig',
-    'Configs.apps.ConfigsConfig',
+    'notifications.apps.NotificationsConfig',
     'taggit',
     'tailwind',
     'mi_blog_theme', 
@@ -110,7 +110,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'Configs.context_processors.user_config',  
+                'notifications.context_proccesor.add_post_urls',
+                'notifications.context_proccesor.image_user',
+                
             ],
         },
     },

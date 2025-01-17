@@ -1,0 +1,157 @@
+{% extends "blog/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #343a40;
+        }
+
+        .notification {
+            padding: 15px;
+            border-left: 5px solid;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background-color 0.3s ease;
+        }
+
+        .notification:hover {
+            background-color: #f1f1f1;
+        }
+
+        .notification-info {
+            border-color: #17a2b8;
+            background-color: #e9f7fb;
+        }
+
+        .notification-success {
+            border-color: #28a745;
+            background-color: #d4edda;
+        }
+
+        .notification-warning {
+            border-color: #ffc107;
+            background-color: #fff3cd;
+        }
+
+        .notification-error {
+            border-color: #dc3545;
+            background-color: #f8d7da;
+        }
+
+        .profile-img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .notification-content {
+            flex-grow: 1;
+        }
+
+        .notification-content h3 {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #495057;
+        }
+
+        .notification-content p {
+            margin: 0;
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .notification-footer {
+            font-size: 12px;
+            color: #adb5bd;
+            text-align: right;
+        }
+
+        .notification span {
+            font-weight: bold;
+        }
+
+        .notification span.read {
+            color: #28a745;
+        }
+
+        .notification span.unread {
+            color: #dc3545;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+{% endblock %}
+
+
+{% block content %}
+<body>
+    <div class="container">
+        <h1>Notificaciones</h1>
+
+        {% if notifications %}
+            <ul class="list-unstyled">
+                {% for notification in notifications %}
+                    <li class="notification 
+                        {% if notification.type == 'info' %}notification-info{% endif %}
+                        {% if notification.type == 'success' %}notification-success{% endif %}
+                        {% if notification.type == 'warning' %}notification-warning{% endif %}
+                        {% if notification.type == 'error' %}notification-error{% endif %}">
+
+                        <!-- Imagen de perfil del autor de la publicación -->
+                        {% if notification.post.author.image_profile %}
+                            <img src="{{ notification.post.author.image_profile.url|default:'/static/default-avatar.jpg' }}" alt="Imagen de perfil" class="profile-img">
+
+                        {% endif %}
+
+                        <div class="notification-content">
+                            <h3>{{ notification.message }}</h3>
+                            <p>
+                                <a href="{{ notification.post.get_absolute_url }}">Ver publicación: {{ notification.post.title }}</a>
+                            </p>
+                        </div>
+
+                        <div class="notification-footer">
+                            <span class="{% if notification.read %}read{% else %}unread{% endif %}">
+                                {% if notification.read %}Leído{% else %}No leído{% endif %}
+                            </span>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No tienes notificaciones.</p>
+        {% endif %}
+    </div>
+</body>
+{% endblock %}

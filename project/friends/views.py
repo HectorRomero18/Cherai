@@ -89,7 +89,7 @@ def delete_friend(request, username):
     except FriendlySent.DoesNotExist:
         messages.error(request, "No se encontró ninguna relación de amistad con este usuario.")
     
-    return redirect('mi_blog:perfilOne', username=user.username, slug=slugify(user.username))
+    return redirect('mi_blog:perfilOne', username=request.user, slug=slugify(request.user))
 
 @login_required
 def follow_user(request, user_id):
@@ -101,7 +101,7 @@ def follow_user(request, user_id):
             messages.info(request, "Ya sigues a este usuario.")
         else:
             messages.success(request, f"Ahora sigues a {user_to_follow.username}.")
-    return redirect('mi_blog:my_friends', username=user_to_follow)
+    return redirect('mi_blog:perfilOne', username=request.user, slug=slugify(request.user))
 
 @login_required
 def unfollow_user(request, user_id):
@@ -109,7 +109,7 @@ def unfollow_user(request, user_id):
     
     Follow.objects.filter(follower=request.user, following=user_to_unfollow).delete()
     messages.success(request, f"Has dejado de seguir a {user_to_unfollow.username}.")
-    return redirect('mi_blog:my_friends', username=user_to_unfollow)
+    return redirect('mi_blog:perfilOne', username=request.user, slug=slugify(request.user))
 
 @login_required
 def show_followers(request):
