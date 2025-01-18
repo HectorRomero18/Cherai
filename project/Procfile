@@ -1,5 +1,1 @@
-<<<<<<< HEAD
 web: gunicorn mi_blog.wsgi:application --bind 0.0.0.0:$PORT
-=======
-web: gunicorn mi_blog.project.project.wsgi:application --bind 0.0.0.0:$PORT
->>>>>>> 3579232d68b428461280a9d4336c4a7a0c343948
