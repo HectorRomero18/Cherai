@@ -13,6 +13,7 @@ from django.views.decorators.http import require_POST
 from django.http import HttpResponse
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from django.db.models import Q, Count
+from django.contrib.auth import get_user_model
 
  
 
@@ -171,6 +172,49 @@ def custom_login(request):
 def custom_logout(request):
     logout(request)  # Cierra la sesión del usuario
     return redirect('mi_blog:login') 
+
+
+def custom_register(request):
+    User = get_user_model()
+    username = ''
+    email = ''
+    
+    if request.method == 'POST':
+        username = request.POST.get('username', '').strip()
+        email = request.POST.get('email', '').strip()
+        password = request.POST.get('password', '').strip()
+        confirm_password = request.POST.get('confirm_password', '').strip()
+
+        # Validar contraseñas coincidentes
+        if password != confirm_password:
+            messages.error(request, '¡Las contraseñas no coinciden!')
+            return redirect('mi_blog:register')
+
+        # Validar campos vacíos
+        if not username or not email or not password:
+            messages.error(request, '¡Debes completar todos los campos!')
+            return redirect('mi_blog:register')
+
+        # Validar si el nombre de usuario ya existe
+        if User.objects.filter(username=username).exists():
+            messages.error(request, 'El nombre de usuario no está disponible.')
+            return redirect('mi_blog:register')
+
+        # Validar si el correo electrónico ya está registrado
+        if User.objects.filter(email=email).exists():
+            messages.error(request, 'El correo electrónico ya está registrado.')
+            return redirect('mi_blog:register')
+
+        
+        User.objects.create_user(username=username, email=email, password=password)
+        messages.success(request, '¡Tu cuenta ha sido creada exitosamente!')
+        return redirect('mi_blog:login')
+
+    return render(request, 'account/login.html', {
+        'username': username,
+        'email': email,
+    })
+
 
 @login_required
 @require_POST

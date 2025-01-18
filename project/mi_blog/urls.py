@@ -18,6 +18,7 @@ urlpatterns = [
     path('eliminar/<int:post_id>/', views.EliminarPost, name='delete'),
     path('friendships/', include('friends.urls')),
     path('users/', views.mostrar_usuarios, name='lista_usuarios'),
+    path('register/', views.custom_register, name='register'),
     path('amigos/<str:username>/', views.show_my_friends, name='my_friends'),
     path('like/<int:post_id>/', views.toggle_like, name='likes')
 ]

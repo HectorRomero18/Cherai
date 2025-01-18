@@ -1,4 +1,5 @@
 {% extends 'blog/base.html' %}
+{% load static %}
 
 {% block content %}
   <div class="container mt-5">
@@ -19,7 +20,7 @@
               </div>
             {% else %}
               <div class="text-center mb-4">
-                <img src="https://via.placeholder.com/150" alt="Imagen por defecto" 
+                <img src="{% static 'img/default-avatar.jpg' %}" alt="Imagen por defecto" 
                     class="rounded-circle img-thumbnail" 
                     style="width: 150px; height: 150px;">
                 <p class="text-muted">No se ha cargado una imagen de perfil.</p>
@@ -63,14 +64,14 @@
   <div class="container mt-5">
     <div class="row">
       <div class="col-md-6 text-center">
-        <h3>Seguidores</h3>
-        <a href="{% url 'friends:my_followers'  %}" class="btn btn-outline-primary btn-lg">
+        <h3>Siguiendo</h3>
+        <a href="{% url 'friends:show_my_followings'  %}" class="btn btn-outline-primary btn-lg">
           {{ following_count }}
         </a>
       </div>
 
       <div class="col-md-6 text-center">
-        <h3>Seguidos</h3>
+        <h3>Seguidores</h3>
         <a href="{% url 'friends:my_followers' %}" class="btn btn-outline-primary btn-lg">
           {{ followers_count }}
         </a>

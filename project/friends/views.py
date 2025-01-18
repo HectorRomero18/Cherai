@@ -101,7 +101,7 @@ def follow_user(request, user_id):
             messages.info(request, "Ya sigues a este usuario.")
         else:
             messages.success(request, f"Ahora sigues a {user_to_follow.username}.")
-    return redirect('mi_blog:perfilOne', username=request.user, slug=slugify(request.user))
+    return redirect('mi_blog:lista_usuarios')
 
 @login_required
 def unfollow_user(request, user_id):
@@ -109,9 +109,14 @@ def unfollow_user(request, user_id):
     
     Follow.objects.filter(follower=request.user, following=user_to_unfollow).delete()
     messages.success(request, f"Has dejado de seguir a {user_to_unfollow.username}.")
-    return redirect('mi_blog:perfilOne', username=request.user, slug=slugify(request.user))
+    return redirect('friends:show_my_followings')
 
 @login_required
 def show_followers(request):
-    followed_users = User.objects.filter(following__follower=request.user)
+    followed_users = User.objects.filter(follower__following=request.user)
     return render(request, 'friends/follow.html', {'followed_users': followed_users})
+
+@login_required
+def show_my_followings(request):
+    following_users = User.objects.filter(following__follower=request.user)
+    return render(request, 'friends/followings.html', {'followings_users': following_users})

@@ -3,11 +3,11 @@
 
 {% block content %}
   <div class="container mt-5">
-    <h2 class="text-center mb-5">Tus seguidores</h2>
+    <h2 class="text-center mb-5">Personas que sigues</h2>
     
-    {% if followed_users %}
+    {% if followings_users %}
       <div class="list-group">
-        {% for user in followed_users %}
+        {% for user in followings_users %}
           <div class="list-group-item d-flex align-items-start border-0 rounded-lg shadow-sm mb-4">
             <div class="d-flex align-items-center" style="width: 100%; padding: 15px;">
               
@@ -37,20 +37,20 @@
             </div>
 
             <!-- Botón de dejar de seguir -->
-            <!-- <div class="d-flex justify-content-end mt-3">
+            <div class="d-flex justify-content-end mt-3">
               <form action="{% url 'friends:unfollow_user' user.username %}" method="POST">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-danger btn-sm" title="Dejar de seguir">
                   <i class="fas fa-user-times"></i> Dejar de seguir
                 </button>
               </form>
-            </div> -->
+            </div>
 
           </div>
         {% endfor %}
       </div>
     {% else %}
-      <p class="text-center">No tienes seguidores todavía.</p>
+      <p class="text-center">No sigues a nadie todavía.</p>
     {% endif %}
   </div>
 {% endblock %}
