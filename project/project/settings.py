@@ -44,8 +44,8 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Application definition
 
 INSTALLED_APPS = [
-    'mi_blog.mi_blog.apps.MiBlogConfig',
     'friends.apps.FriendsConfig',
+    'mi_blog.apps.MiBlogConfig',
     'notifications.apps.NotificationsConfig',
     'taggit',
     'tailwind',
