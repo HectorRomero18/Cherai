@@ -8,6 +8,11 @@ https://docs.djangoproject.com/en/5.1/howto/deployment/asgi/
 """
 
 import os
+import sys
+
+path = os.path.expanduser('C:/mi_blog/project')  # Asegúrate de usar la ruta correcta
+if path not in sys.path:
+    sys.path.insert(0, path)
 
 from django.core.asgi import get_asgi_application
 
