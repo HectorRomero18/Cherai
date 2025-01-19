@@ -106,7 +106,7 @@ ROOT_URLCONF = 'project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'mi_blog', 'templates')],  # Este directorio debe existir
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # Este directorio debe existir
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
