@@ -360,7 +360,7 @@
                 <li class="nav-item">
                     <div class="profile-details d-flex align-items-center">
                     <div class="profile-content">
-                        <a href="{% url 'mi_blog:perfilOne' username=user slug=request.user %}">
+                        <a href="{% url 'mi_blog:perfilOne' username=request.user.username slug=request.user.slug %}">
                         <img src="{{ user.image_profile.url }}" class="rounded-circle" style="width: 65px; height: 65px; object-fit: cover;" alt="Foto">
                         </a>
                     </div>
