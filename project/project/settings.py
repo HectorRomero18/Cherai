@@ -44,11 +44,11 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Application definition
 
 INSTALLED_APPS = [
+    'taggit',
+    'tailwind',
     'mi_blog.apps.MiBlogConfig',
     'friends.apps.FriendsConfig',
     'notifications.apps.NotificationsConfig',
-    'taggit',
-    'tailwind',
     'mi_blog_theme', 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -130,7 +130,7 @@ WSGI_APPLICATION = 'project.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(default=config('DATABASE_URL'))
+    'default': dj_database_url.config(default=config('DATABASE_URL'), conn_max_age=600, ssl_require=True)
 }
 
 
