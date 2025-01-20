@@ -10,6 +10,9 @@ https://docs.djangoproject.com/en/5.1/howto/deployment/asgi/
 import os
 import sys
 
+sys.path.append(os.path.join(os.path.dirname(__file__), 'project'))  # Ajusta según tu estructura
+
+
 path = os.path.expanduser('C:/mi_blog/project')  # Asegúrate de usar la ruta correcta
 if path not in sys.path:
     sys.path.insert(0, path)
