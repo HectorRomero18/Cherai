@@ -46,8 +46,8 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 INSTALLED_APPS = [
     'taggit',
     'tailwind',
+    '.friends.apps.FriendsConfig',
     'mi_blog.apps.MiBlogConfig',
-    'friends.apps.FriendsConfig',
     'notifications.apps.NotificationsConfig',
     'mi_blog_theme', 
     'django.contrib.admin',
