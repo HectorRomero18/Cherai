@@ -228,6 +228,9 @@ SECURE_HSTS_SECONDS = 3000000  # Asegura que los navegadores solo usen HTTPS por
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Aplica la política HSTS a todos los subdominios
 SECURE_HSTS_PRELOAD = True # Permite que tu dominio se añada a la lista de dominios pre-cargados HSTS
 
+SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin'
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # Filtro de info sensible (errores)
 ADMINS = [('Xhector', 'hectorraul16romero@gmail.com')]  # Para recibir alertas sobre errores
 LOGGING = {
