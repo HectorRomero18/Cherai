@@ -211,17 +211,22 @@ LOGOUT_REDIRECT_URL = '/accounts/login/'  # URL a la que se redirige después de
 SITE_ID = 1
 
 # COOKIES
-CSRF_COOKIE_SECURE = False  # Asegura que la cookie CSRF solo se envíe a través de HTTPS
-CSRF_COOKIE_HTTPONLY = False  # Hace que la cookie no sea accesible a través de JavaScript
-SESSION_COOKIE_SECURE = False  # Asegura que la cookie de sesión solo se envíe a través de HTTPS
-SESSION_COOKIE_HTTPONLY = False  # Hace que la cookie de sesión no sea accesible a través de JavaScript
+CSRF_COOKIE_SECURE = True  # Asegura que la cookie CSRF solo se envíe a través de HTTPS
+CSRF_COOKIE_HTTPONLY = True # Hace que la cookie no sea accesible a través de JavaScript
+SESSION_COOKIE_SECURE = True  # Asegura que la cookie de sesión solo se envíe a través de HTTPS
+SESSION_COOKIE_HTTPONLY = True  # Hace que la cookie de sesión no sea accesible a través de JavaScript
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://cheraiplus.onrender.com',
+]
+
 
 
 # Redirect Security
-SECURE_SSL_REDIRECT = False  # Redirige automáticamente HTTP a HTTPS
-SECURE_HSTS_SECONDS = 0  # Asegura que los navegadores solo usen HTTPS por 1 año
-SECURE_HSTS_INCLUDE_SUBDOMAINS = False  # Aplica la política HSTS a todos los subdominios
-SECURE_HSTS_PRELOAD = False  # Permite que tu dominio se añada a la lista de dominios pre-cargados HSTS
+SECURE_SSL_REDIRECT = True  # Redirige automáticamente HTTP a HTTPS
+SECURE_HSTS_SECONDS = 3000000  # Asegura que los navegadores solo usen HTTPS por 1 año
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Aplica la política HSTS a todos los subdominios
+SECURE_HSTS_PRELOAD = True # Permite que tu dominio se añada a la lista de dominios pre-cargados HSTS
 
 # Filtro de info sensible (errores)
 ADMINS = [('Xhector', 'hectorraul16romero@gmail.com')]  # Para recibir alertas sobre errores
