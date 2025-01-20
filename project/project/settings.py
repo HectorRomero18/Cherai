@@ -17,7 +17,7 @@ import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='https://127.0.0.1:8000/' , cast=Csv())
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='cheraiplus.onrender.com' , cast=Csv())
 
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5' 
