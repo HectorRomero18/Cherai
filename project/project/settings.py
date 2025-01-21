@@ -17,7 +17,7 @@ import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1' , cast=Csv())
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='cheraiplus.onrender.com' , cast=Csv())
 
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5' 
@@ -32,7 +32,7 @@ SECRET_KEY = config('DJANGO_SECRET_KEY')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DJANGO_DEBUG', default=True, cast=bool)
+DEBUG = True
 
 AUTH_USER_MODEL = 'mi_blog.User' 
 
@@ -44,11 +44,11 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Application definition
 
 INSTALLED_APPS = [
-    'mi_blog.apps.MiBlogConfig',
-    'friends.apps.FriendsConfig',
-    'notifications.apps.NotificationsConfig',
     'taggit',
     'tailwind',
+    'friends.apps.FriendsConfig',
+    'mi_blog.apps.MiBlogConfig',
+    'notifications.apps.NotificationsConfig',
     'mi_blog_theme', 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -106,7 +106,7 @@ ROOT_URLCONF = 'project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'mi_blog', 'templates')],  # Este directorio debe existir
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # Este directorio debe existir
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -130,7 +130,7 @@ WSGI_APPLICATION = 'project.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(default=config('DATABASE_URL'))
+    'default': dj_database_url.config(default=config('DATABASE_URL'), conn_max_age=600, ssl_require=True)
 }
 
 
@@ -211,17 +211,25 @@ LOGOUT_REDIRECT_URL = '/accounts/login/'  # URL a la que se redirige después de
 SITE_ID = 1
 
 # COOKIES
-CSRF_COOKIE_SECURE = False  # Asegura que la cookie CSRF solo se envíe a través de HTTPS
-CSRF_COOKIE_HTTPONLY = False  # Hace que la cookie no sea accesible a través de JavaScript
-SESSION_COOKIE_SECURE = False  # Asegura que la cookie de sesión solo se envíe a través de HTTPS
-SESSION_COOKIE_HTTPONLY = False  # Hace que la cookie de sesión no sea accesible a través de JavaScript
+CSRF_COOKIE_SECURE = True  # Asegura que la cookie CSRF solo se envíe a través de HTTPS
+CSRF_COOKIE_HTTPONLY = True # Hace que la cookie no sea accesible a través de JavaScript
+SESSION_COOKIE_SECURE = True  # Asegura que la cookie de sesión solo se envíe a través de HTTPS
+SESSION_COOKIE_HTTPONLY = True  # Hace que la cookie de sesión no sea accesible a través de JavaScript
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://cheraiplus.onrender.com',
+]
+
 
 
 # Redirect Security
-SECURE_SSL_REDIRECT = False  # Redirige automáticamente HTTP a HTTPS
-SECURE_HSTS_SECONDS = 0  # Asegura que los navegadores solo usen HTTPS por 1 año
-SECURE_HSTS_INCLUDE_SUBDOMAINS = False  # Aplica la política HSTS a todos los subdominios
-SECURE_HSTS_PRELOAD = False  # Permite que tu dominio se añada a la lista de dominios pre-cargados HSTS
+SECURE_SSL_REDIRECT = True  # Redirige automáticamente HTTP a HTTPS
+SECURE_HSTS_SECONDS = 3000000  # Asegura que los navegadores solo usen HTTPS por 1 año
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Aplica la política HSTS a todos los subdominios
+SECURE_HSTS_PRELOAD = True # Permite que tu dominio se añada a la lista de dominios pre-cargados HSTS
+
+SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin'
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Filtro de info sensible (errores)
 ADMINS = [('Xhector', 'hectorraul16romero@gmail.com')]  # Para recibir alertas sobre errores
@@ -242,5 +250,3 @@ LOGGING = {
         },
     },
 }
-
-
